@@ -1,0 +1,121 @@
+{% extends 'company_layout.html' %}
+{% load static %}
+
+{% block title %}查看服务问题{% endblock %}
+
+{% block header %}
+    <h2 class="page-title">{{ request.session.info.name }}，欢迎您查看服务{{ service_obj.service_name }}问题</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="col-lg-10 col-xl-9">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">当前服务{{ service_obj.service_name }}问题信息</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ service_obj.service_name }}共计有{{ all_notice|length }}个通知：</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                        <thead>
+                                        <tr>
+                                            <th>发布</th>
+                                            <th>文本</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for notice in all_notice %}
+                                            <tr>
+                                                <td>{{ notice.from_service.service_name }}</td>
+                                                <td class="text-muted">
+                                                    {{ notice.text }}
+                                                </td>
+                                                <td>{{ notice.create_time }}</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <a href="/company/service/notice/edit/{{ service_obj.id }}/{{ notice.id }}/"
+                                                           class="btn btn-primary w-50">
+                                                            编辑
+                                                        </a>
+                                                        <a href="#" class="btn btn-danger w-50" data-bs-toggle="modal"
+                                                           data-bs-target="#modal-danger-{{ notice.id }}">
+                                                            删除
+                                                        </a>
+                                                        <div class="modal modal-blur fade" id="modal-danger-{{ notice.id }}"
+                                                             tabindex="-1" aria-hidden="true" style="display: none;">
+                                                            <div class="modal-dialog modal-sm modal-dialog-centered"
+                                                                 role="document">
+                                                                <div class="modal-content">
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                    <div class="modal-status bg-danger"></div>
+                                                                    <div class="modal-body text-center py-4">
+                                                                        <!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                             class="icon mb-2 text-danger icon-lg"
+                                                                             width="24" height="24"
+                                                                             viewBox="0 0 24 24" stroke-width="2"
+                                                                             stroke="currentColor" fill="none"
+                                                                             stroke-linecap="round"
+                                                                             stroke-linejoin="round">
+                                                                            <path stroke="none" d="M0 0h24v24H0z"
+                                                                                  fill="none"></path>
+                                                                            <path d="M12 9v2m0 4v.01"></path>
+                                                                            <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
+                                                                        </svg>
+                                                                        <h3>你确定？</h3>
+                                                                        <div class="text-muted">你确定要删除这个通知吗？这可是无法撤回的！
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="w-100">
+                                                                            <div class="row">
+                                                                                <div class="col"><a href="#"
+                                                                                                    class="btn w-100"
+                                                                                                    data-bs-dismiss="modal">
+                                                                                    取消
+                                                                                </a></div>
+                                                                                <div class="col"><a
+                                                                                        href="/company/service/notice/delete/{{ service_obj.id }}/{{ notice.id }}/"
+                                                                                        class="btn btn-danger w-100"
+                                                                                        >
+                                                                                    确认删除
+                                                                                </a></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex">
+                    <a href="/company/service/list/" class="btn btn-link">返回</a>
+                    <a href="/company/service/notice/add/{{ service_obj.id }}/"
+                       class="btn btn-primary ms-auto">去添加通知</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

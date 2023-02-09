@@ -1,0 +1,222 @@
+{% extends 'company_layout.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/dropzone.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}企业主页{% endblock %}
+
+{% block header %}
+    <h2 class="page-title">{{ company_info.company_name }}</h2>
+{% endblock %}
+{% block content %}
+    <div class="container-xl">
+        <div class="row row-cards">
+            <div class="col-md-6 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">企业概况</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row row-0">
+                            <div class="col-3 order-md-last">
+                                <!-- Photo -->
+                                <img src="{{ MEDIA_URL }}icon/{{ company_info.icon }}/"
+                                     class="w-100 h-100 object-cover card-img-end">
+                            </div>
+                            <div class="col">
+                                <div class="card-body">
+                                    <h3 class="card-title">{{ company_info.company_name }}</h3>
+                                    <p class="text-muted">欢迎您，{{ company_info.company_name }}，使用项目名称还没想好</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">企业ID：</label>
+                            <div class="form-control-plaintext">{{ company_info.id }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">类型：</label>
+                            <div class="form-control-plaintext">
+                                {% if company_info.type == 1 %}
+                                    学校
+                                {% elif company_info.type == 2 %}
+                                    政府
+                                {% elif company_info.type == 3 %}
+                                    企业
+                                {% else %}
+                                    其他
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">加入时间：</label>
+                            <div class="form-control-plaintext">{{ company_info.create_time }}</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">操作</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <button class="btn btn-primary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#myModal1">
+                                修改信息
+                            </button>
+                        </div>
+                        <div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">编辑企业信息</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <form id="edit_form1" novalidate>
+                                        <div class="modal-body">
+                                            {% csrf_token %}
+                                            {% for field in form %}
+                                                <h4>{{ field.label }}</h4>
+                                                {{ field }}
+                                                <span class="error-msg" style="color: red;"></span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">取消
+                                            </button>
+                                            <button id="btnSave1" type="button" class="btn btn-primary">保存
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-secondary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#myModal2">
+                                上传头像
+                            </button>
+                        </div>
+                        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">编辑企业头像</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="card-body p-4 text-center">
+                                <span class="avatar avatar-xl mb-3 avatar-rounded"
+                                      style="background-image: url({{ MEDIA_URL }}icon/{{ company_info.icon }}/)"></span>
+                                        <h3 class="m-0 mb-1">当前头像</h3>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="container-xl">
+                                            <div class="card-body">
+                                                <h3 class="card-title">上传图标</h3>
+                                                <form class="dropzone" id="dropzone-custom"
+                                                      action="/company/edit_icon/" autocomplete="off"
+                                                      novalidate>
+                                                    {% csrf_token %}
+                                                    <div class="fallback">
+                                                        <input name="file" type="file"/>
+                                                    </div>
+                                                    <div class="dz-message">
+                                                        <h3 class="dropzone-msg-title">将图片拖拽至此上传头像</h3>
+                                                        <span class="dropzone-msg-desc">只支持.jpg,.png,.jpeg</span>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">取消
+                                        </button>
+                                        <a href="/company/main/" class="btn btn-primary">
+                                            确认
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <a href="/company/edit_password/" class="btn btn-success w-100">
+                                修改密码
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script src="{% static 'js/dropzone-min.js' %}" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new Dropzone("#dropzone-custom")
+        })
+    </script>
+    <script>
+        $(function () {
+            (function () {
+                $("#btnSave1").click(
+                    function () {
+                        $(".error-message").empty()
+                        $.ajax({
+                            url: '/company/edit/',
+                            type: 'post',
+                            data: $("#edit_form1").serialize(),
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (res.status) {
+                                    $('#myModal1').modal('hide');
+                                    window.location.reload();
+                                } else {
+                                    console.log(res)
+                                    $.each(res.error, function (name, errorList) {
+                                        $("#id_" + name).next().text(errorList[0]);
+                                    })
+                                }
+                            }
+                        })
+                    }
+                )
+            })();
+        })
+        $(function () {
+            (function () {
+                $("#btnSave2").click(
+                    function () {
+                        $.ajax({
+                            url: '/company/edit_icon/',
+                            type: 'post',
+                            data: $("#dropzone-custom").serialize(),
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (res.status) {
+                                    $('#myModal2').modal('hide');
+                                    window.location.reload();
+                                } else {
+
+                                }
+                            }
+                        })
+                    }
+                )
+            })();
+        })
+    </script>
+{% endblock %}

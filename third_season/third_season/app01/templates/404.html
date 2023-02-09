@@ -1,0 +1,15 @@
+{% extends 'simple_layout.html' %}
+
+{% block title %}404啊{% endblock %}
+
+{% block header %}
+    <div class="empty-header">404</div>
+    <p class="empty-title">没有找到您请求的页面</p>
+    <p class="empty-subtitle text-muted">
+        怎么回事呢。。。
+    </p>
+{% endblock %}
+
+{% block onclick %}
+    onclick="javascript:history.back(-1);"
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'user_layout.html' %}
+
+{% block title %}消息{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">最新消息</h3>
+        </div>
+        <div class="list-group list-group-flush list-group-hoverable">
+            {% for message in message_info %}
+            <div class="list-group-item">
+                <div class="row align-items-center" onclick="(function (){}(window.location.href='/user/dialog/{{ message.service_id.id }}'))">
+                    <div class="col-auto">
+                        <a href="/user/dialog/{{ message.service_id.id }}/">
+                            <span class="avatar" style="background-image: url({{ MEDIA_URL }}logo/{{ message.service_id.icon }}/)"></span>
+                        </a>
+                    </div>
+                    <div class="col text-truncate">
+                        <a href="/user/dialog/{{ message.service_id.id }}/" class="text-reset d-block">{{ message.service_id.service_name }}</a>
+                        <div class="d-block text-muted text-truncate mt-n1">
+                            {{ message.text }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        {{ message.create_time|date:'H:m' }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

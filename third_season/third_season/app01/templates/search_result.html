@@ -1,0 +1,178 @@
+{% extends 'user_layout.html' %}
+
+{% load static %}
+
+{% block title %}用户搜索结果{% endblock %}
+
+{% block header %}<h2 class="page-title">用户搜索结果</h2>{% endblock %}
+
+{% block content %}
+    <div class="container-xl">
+        <div class="row row-cards">
+            {% if search_result|length != 0 %}
+                {% for service in search_result %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ service.service_name }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row row-0">
+                                    <div class="col-3 order-md-last">
+                                        <!-- Photo -->
+                                        <img src="{{ MEDIA_URL }}logo/{{ service.icon }}/"
+                                             class="w-100 h-100 object-cover card-img-end">
+                                    </div>
+                                    <div class="col">
+                                        <div class="card-body">
+                                            <h3 class="card-title">{{ service.service_name }}</h3>
+                                            <p class="text-muted">{{ service.describe }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a href="#tabs-home-{{ forloop.counter0 }}" class="nav-link active"
+                                                   data-bs-toggle="tab"
+                                                   aria-selected="true" role="tab">信息</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a href="#tabs-profile-{{ forloop.counter0 }}" class="nav-link"
+                                                   data-bs-toggle="tab"
+                                                   aria-selected="false" tabindex="-1" role="tab">操作</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active show" id="tabs-home-{{ forloop.counter0 }}"
+                                                 role="tabpanel">
+                                                <h4>信息概况</h4>
+                                                <div>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-vcenter card-table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>信息</th>
+                                                                <th>概况</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>服务ID：</td>
+                                                                <td class="text-muted">
+                                                                    {{ service.id }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>类型：</td>
+                                                                <td class="text-muted">
+                                                                    {{ service.type }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>创建时间：</td>
+                                                                <td class="text-muted">
+                                                                    {{ service.create_time }}
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="tabs-profile-{{ forloop.counter0 }}"
+                                                 role="tabpanel">
+                                                <h4>操作</h4>
+                                                <div>
+                                                    <div class="mb-3">
+                                                        <a href="#" class="btn btn-success w-100"
+                                                           id="btn1-{{ forloop.counter0 }}">
+                                                            订阅
+                                                        </a>
+                                                    </div>
+                                                    <div class="modal modal-blur fade" id="modal-simple-{{ forloop.counter0 }}" tabindex="-1"
+                                                         style="display: none;" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">信息</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body"
+                                                                     id="textInModal-{{ forloop.counter0 }}">
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary"
+                                                                            data-bs-dismiss="modal">好的
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <a href="#" class="btn btn-danger w-100"
+                                                           id="btn2-{{ forloop.counter0 }}">
+                                                            不再订阅
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h1>没有搜索到任何服务</h1>
+                <p>唉</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script>
+        {% for service in search_result %}
+            $(function () {
+                (function () {
+                    $("#btn1-{{ forloop.counter0 }}").click(
+                        function () {
+                            $.ajax({
+                                url: '/user/subscribe/{{ service.id }}/',
+                                type: 'get',
+                                success: function (res) {
+                                    $("#textInModal-{{ forloop.counter0 }}").html(res.to_show)
+                                    $("#modal-simple-{{ forloop.counter0 }}").modal('show')
+                                }
+                            })
+                        }
+                    )
+                })();
+            })
+            $(function () {
+                (function () {
+                    $("#btn2-{{ forloop.counter0 }}").click(
+                        function () {
+                            $.ajax({
+                                url: '/user/unfollow/{{ service.id }}/',
+                                type: 'get',
+                                success: function (res) {
+                                    $("#textInModal-{{ forloop.counter0 }}").html(res.to_show)
+                                    $("#modal-simple-{{ forloop.counter0 }}").modal('show')
+                                }
+                            })
+                        }
+                    )
+                })();
+            })
+        {% endfor %}
+    </script>
+{% endblock %}

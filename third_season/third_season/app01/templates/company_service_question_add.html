@@ -1,0 +1,65 @@
+{% extends 'company_layout.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/dropzone.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}服务添加问题{% endblock %}
+
+{% block header %}
+    <h2 class="page-title">服务添加问题</h2>
+{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">欢迎您为服务添加问题</h3>
+        </div>
+        <div class="card-body">
+            <p>现在宁正为{{ service_obj.service_name }}添加问题</p>
+            <p>请准备像类似下面那样的问题文档<b>（.txt文件）</b>，来让为宁的服务添加问题</p>
+            <pre class="highlight">
+                            <code>
+q:100以内最大的质数是什么？
+a:97
+q:什么是生命、宇宙以及任何事情的终极答案？
+a:42
+q:假设在一个电车轨道上被绑了5个人，而它的备用轨道上被绑了1个人，又有一辆失控的电车飞速驶来，而你身边正好有一个摇杆，你可以推动摇杆来让电车驶入备用轨道，杀死那1个人，救下5个人。你也可以什么也不做，杀死5个人，救下1个人。眼看电车就要驶入那片区域了，你必须在很短的时间内做出决定，杀死1个人，救下5个人，还是杀死5个人，救下1个人。你会怎么做？
+a:铁轨总得撞死一个要不把你给撞死吧
+                            </code>
+                        </pre>
+            <p>问题之前，请使用<b>q:</b>标记</p>
+            <p>回答之前，请使用<b>a:</b>标记</p>
+            <p>问题与回答之间，请使用<b>换行</b>隔开</p>
+            <form class="dropzone" id="dropzone-multiple"
+                  action="/company/service/question/upload/{{ service_obj.id }}/" autocomplete="off"
+                  novalidate>
+                {% csrf_token %}
+                <div class="fallback">
+                    <input name="file" type="file" multiple/>
+                </div>
+                <div class="dz-message">
+                    <h3 class="dropzone-msg-title">在这里上传QA文档</h3>
+                    <span class="dropzone-msg-desc">请严格按照格式</span>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex">
+                <a href="/company/service/list/" class="btn btn-link">取消</a>
+                <a href="/company/service/deploy/{{ service_obj.id }}/preview/"
+                   class="btn btn-primary ms-auto">上传完成，去部署</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/dropzone-min.js' %}" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new Dropzone("#dropzone-multiple")
+        })
+    </script>
+{% endblock %}

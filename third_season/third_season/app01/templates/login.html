@@ -1,0 +1,45 @@
+{% extends 'identityless.html' %}
+{% block title %}智话未来登录{% endblock %}
+{% block content %}
+    <div class="login">
+        <h2>智话未来</h2>
+        <div class="login-top">
+            <h1>登录</h1>
+            <form id="login_form" method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <h4>{{ field.label }}</h4>
+                    {{ field }}
+                    <br><span style="color: red;">{{ field.errors.0 }}</span>
+                {% endfor %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal">
+                            点击验证
+                        </button>
+                    </div>
+                    <div class="col-sm-6">
+                        {% if is_verified %}
+                            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="forgot">
+                    <a href="/forget">忘记密码</a>
+                    <input type="submit" value="登录">
+                </div>
+            </form>
+            {% include 'verify_modal.html' %}
+        </div>
+        <div class="login-bottom">
+            <h3>新用户 &nbsp;<a href="/register">注册</a>&nbsp 点这里</h3>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>山东大学威海数科班 重案六组</p>
+    </div>
+{% endblock %}
+

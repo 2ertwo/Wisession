@@ -1,0 +1,20 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Custom Theme files -->
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap-theme.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script src={% static "plugins/bootstrap-3.4.1/js/bootstrap.min.js" %}></script>
+    <!-- Custom Theme files -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+{% block content %}{% endblock %}
+</body>
+</html>

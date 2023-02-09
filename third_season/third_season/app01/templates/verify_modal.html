@@ -1,0 +1,74 @@
+{% load static %}
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">您的验证将帮助深度学习发展</h4>
+            </div>
+            <div class="modal-body">
+                <h1>请点击所有的{{ verify_code.target }}</h1>
+                <h4>之后，点击验证</h4>
+                {% for pic in verify_code.pic_list %}
+                    {% if forloop.counter0|divisibleby:3 %}
+                        <div class="row">
+                    {% endif %}
+                <div class="col-xs-4">
+                    <img src="{{ pic }}" class="img-responsive" alt=""
+                         style="border-style: dashed;border-width: 5px;border-color: white;"
+                         id="img_{{ forloop.counter0 }}"
+                         onclick="(function () {
+                                 if (selected[{{ forloop.counter0 }}] === 0) {
+                                 selected[{{ forloop.counter0 }}] = 1;
+                                 document.getElementById('img_{{ forloop.counter0 }}').setAttribute('style','border-style: dashed;border-width: 5px;border-color: red;');
+                                 }else {
+                                 selected[{{ forloop.counter0 }}] = 0;
+                                 document.getElementById('img_{{ forloop.counter0 }}').setAttribute('style','border-style: dashed;border-width: 5px;border-color: white;');
+                                 }
+                                 })()">
+                </div>
+                {% if forloop.counter0|add:1|divisibleby:3 %}
+                    </div>
+                {% endif %}
+                {% endfor %}
+
+            </div>
+            <div class=" modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <a type="button" class="btn btn-primary" onclick="verify()">验证</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        var selected = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    function verify() {
+        var answer = '';
+        for (let i = 0; i < 9; i++) {
+            if (selected[i] === 1) {
+                answer = answer + i;
+            }
+        }
+        console.log(answer);
+        $.ajax({
+            url: '/verify/',
+            type: 'post',
+            data: {'answer': answer},
+            dataType: "JSON",
+            success: function (res) {
+                if (res.status) {
+                    $('#myModal').modal('hide');
+                } else {
+                    $.each(res.error, function (name, errorList) {
+                        $("#id_" + name).next().text(errorList[0]);
+                    })
+                }
+            }
+        });
+        console.log(answer);
+    }
+</script>

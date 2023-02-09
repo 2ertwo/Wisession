@@ -1,0 +1,94 @@
+{% extends 'company_layout.html' %}
+{% load static %}
+
+{% block title %}查看服务问题{% endblock %}
+
+{% block header %}
+    <h2 class="page-title">{{ request.session.info.name }}，欢迎您查看服务{{ service_obj.service_name }}问题</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="col-lg-10 col-xl-9">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">当前服务{{ service_obj.service_name }}问题信息</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ service_obj.service_name }}共计有{{ count }}个问题：</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                        <thead>
+                                        <tr>
+                                            <th>问题</th>
+                                            <th>答案</th>
+                                            <th class="w-1"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for qa in all_qa %}
+                                            <tr>
+                                                <td>{{ qa.question }}</td>
+                                                <td class="text-muted">
+                                                    {{ qa.answer }}
+                                                </td>
+                                                <td>
+                                                    <a href="/company/service/question/delete/{{ service_obj.id }}/{{ qa.id }}/" class="btn btn-danger w-100">
+                                                        删除
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="pagination ">
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="/company/service/question/list/{{ service_obj.id }}/{{ page|add:-1 }}/">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <polyline points="15 6 9 12 15 18"></polyline>
+                                    </svg>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link"
+                                                            href="/company/service/question/list/{{ service_obj.id }}/{{ page }}/">{{ page }}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="/company/service/question/list/{{ service_obj.id }}/{{ page|add:1 }}/">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <polyline points="9 6 15 12 9 18"></polyline>
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex">
+                    <a href="/company/service/list/" class="btn btn-link">返回</a>
+                    <a href="/company/service/question/add/{{ service_obj.id }}/"
+                       class="btn btn-primary ms-auto">去添加问题</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

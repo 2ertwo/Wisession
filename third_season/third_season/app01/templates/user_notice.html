@@ -1,0 +1,40 @@
+{% extends 'user_layout.html' %}
+
+{% block title %}通知{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for notice in notice_list %}
+                        <tr onclick="(function (){}(window.location.href='/user/dialog/{{ notice.from_service_id }}'))">
+                            <th scope="row">
+                                <img class="media-object" data-src="holder.js/64x64" alt="64x64"
+                                     src="{{ MEDIA_URL }}logo/{{ notice.from_service.icon }}/"
+                                     data-holder-rendered="true" style="width: 64px; height: 64px;">
+                            </th>
+                            <td><h1>{{ notice.from_service.service_name }}   <small>{{ notice.create_time|date:'Y-M-d H:m:s' }}</small></h1>
+                                <p>{{ notice.text }}</p>
+                            </td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+{% endblock %}

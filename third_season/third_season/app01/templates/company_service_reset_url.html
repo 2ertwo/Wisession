@@ -1,0 +1,76 @@
+{% extends 'company_layout.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/dropzone.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}企业重设url{% endblock %}
+
+{% block header %}
+    <h2 class="page-title">{{ request.session.info.name }}，欢迎您重设url</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="col-lg-10 col-xl-9">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">最后，基于你部署的是外部接口类</h3>
+            </div>
+            <div class="card-body">
+                <p>我们将会向您输入的地址发送信息</p>
+                <p>格式为：HTTP POST</p>
+                <pre class="highlight">
+                            <code>
+data = {
+'service_id':您的服务id,
+'token':您的服务专属密钥,
+'user_id':用户id,
+'text':用户发送的文本
+}
+                            </code>
+                        </pre>
+                <form id="append_form">
+                    {% csrf_token %}
+                    {% for field in appended_form %}
+                        <div class="mb-3">
+                            {{ field.label }}
+                            <div>
+                                {{ field }}
+                            </div>
+                            <small class="form-hint">{{ field.errors.0 }}</small>
+                        </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex">
+                    <a href="/company/service/list/" class="btn btn-link">稍后填写目标url</a>
+                    <a href="/company/service/list/" class="btn btn-primary ms-auto" id="btnSave">填写完成</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script src="{% static 'js/dropzone-min.js' %}" defer></script>
+    <script>
+        $(function () {
+            (function () {
+                $("#btnSave").click(
+                    function () {
+                        $.ajax({
+                            url: '/company/service/set_url/',
+                            type: 'post',
+                            data: $("#append_form").serialize(),
+                            dataType: "JSON",
+                        })
+                    }
+                )
+            })();
+        })
+    </script>
+{% endblock %}

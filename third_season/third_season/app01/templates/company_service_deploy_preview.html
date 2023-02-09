@@ -1,0 +1,104 @@
+{% extends 'company_layout.html' %}
+{% load static %}
+
+{% block title %}企业部署服务{% endblock %}
+
+{% block header %}
+    <h2 class="page-title">{{ request.session.info.name }}，欢迎您部署服务{{ service_obj.service_name }}</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="col-lg-10 col-xl-9">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">当前服务{{ service_obj.service_name }}部署信息</h3>
+            </div>
+            <div class="card-body">
+                <p>这可能会花很长时间，这取决于你的问题多少和我们的服务器性能</p>
+                <p>令人感慨</p>
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ service_obj.service_name }}有{{ count_qa.0.count }}个问题未部署：</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                        <thead>
+                                        <tr>
+                                            <th>问题</th>
+                                            <th>答案</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for qa in new_qa %}
+                                            <tr>
+                                                <td>{{ qa.question }}</td>
+                                                <td class="text-muted">
+                                                    {{ qa.answer }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ service_obj.service_name }}有{{ count_qa.1.count }}个问题已部署：</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                        <thead>
+                                        <tr>
+                                            <th>问题</th>
+                                            <th>答案</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for qa in old_qa %}
+                                            <tr>
+                                                <td>{{ qa.question }}</td>
+                                                <td class="text-muted">
+                                                    {{ qa.answer }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="/company/service/list/" class="btn btn-primary" id="btnDeploy">确认部署</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script>
+        $(function () {
+            (function () {
+                $("#btnDeploy").click(
+                    function () {
+                        $.ajax({
+                            url: '/company/service/deploy/{{ service_obj.id }}/deploy/',
+                            type: 'GET',
+                        })
+                    }
+                )
+            })();
+        })
+    </script>
+{% endblock %}

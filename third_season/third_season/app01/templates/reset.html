@@ -1,0 +1,24 @@
+{% extends 'identityless.html' %}
+{% block title %}智话未来重置密码{% endblock %}
+{% block content %}
+    <div class="login">
+        <h2>智话未来</h2>
+        <div class="login-top">
+            <h1>您正在重置密码</h1>
+            <form id="login_form" method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <h4>{{ field.label }}</h4>
+                    {{ field }}
+                    <br><span style="color: red;">{{ field.errors.0 }}</span>
+                {% endfor %}
+                <div class="forgot">
+                    <input type="submit" value="提交">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>山东大学威海数科班 重案六组</p>
+    </div>
+{% endblock %}

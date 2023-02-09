@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- CSS files -->
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/demo.min.css' %}" rel="stylesheet"/>
+    <style>
+        @import url('https://rsms.me/inter/inter.css');
+
+        :root {
+            --tblr-font-sans-serif: Inter, -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<script src="{% static 'js/demo-theme.min.js' %}"></script>
+<div class="page page-center">
+    <div class="container-tight py-4">
+        <div class="empty">
+            {% block header %}{% endblock %}
+            <div class="empty-action">
+                <a href="{% block return_url %}{% endblock %}" class="btn btn-primary" {% block onclick %}{% endblock %}>
+                    <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <line x1="5" y1="12" x2="11" y2="18"></line>
+                        <line x1="5" y1="12" x2="11" y2="6"></line>
+                    </svg>
+                    返回
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/tabler.min.js' %}" defer></script>
+<script src="{% static 'js/demo.min.js' %}" defer></script>
+</body>
+</html>

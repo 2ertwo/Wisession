@@ -1,0 +1,279 @@
+{% extends 'company_layout.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/dropzone.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}企业服务列表{% endblock %}
+
+{% block header %}<h2 class="page-title">企业服务列表</h2>{% endblock %}
+
+{% block content %}
+    <div class="container-xl">
+        <div class="row row-cards">
+            {% if service_list|length != 0 %}
+                {% for service in service_list %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ service.service_name }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row row-0">
+                                    <div class="col-3 order-md-last">
+                                        <!-- Photo -->
+                                        <img src="{{ MEDIA_URL }}logo/{{ service.icon }}/"
+                                             class="w-100 h-100 object-cover card-img-end">
+                                    </div>
+                                    <div class="col">
+                                        <div class="card-body">
+                                            <h3 class="card-title">{{ service.service_name }}</h3>
+                                            <p class="text-muted">{{ service.describe }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a href="#tabs-home-{{ forloop.counter0 }}" class="nav-link active"
+                                                   data-bs-toggle="tab"
+                                                   aria-selected="true" role="tab">信息</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a href="#tabs-profile-{{ forloop.counter0 }}" class="nav-link"
+                                                   data-bs-toggle="tab"
+                                                   aria-selected="false" tabindex="-1" role="tab">操作</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active show" id="tabs-home-{{ forloop.counter0 }}"
+                                                 role="tabpanel">
+                                                <h4>信息概况</h4>
+                                                <div>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-vcenter card-table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>信息</th>
+                                                                <th>概况</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>服务ID：</td>
+                                                                <td class="text-muted">
+                                                                    {{ service.id }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>类型：</td>
+                                                                <td class="text-muted">
+                                                                    {{ service.type }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>创建时间：</td>
+                                                                <td class="text-muted">
+                                                                    {{ service.create_time }}
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="tabs-profile-{{ forloop.counter0 }}"
+                                                 role="tabpanel">
+                                                <h4>操作</h4>
+                                                <div>
+                                                    <div class="mb-3">
+                                                        <a href="/company/service/edit/{{ service.id }}/"
+                                                           class="btn btn-primary w-100">
+                                                            修改信息
+                                                        </a>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <a href="#" class="btn btn-secondary w-100"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#modal-{{ forloop.counter0 }}">
+                                                            修改头像
+                                                        </a>
+                                                    </div>
+                                                    <div class="modal fade" id="modal-{{ forloop.counter0 }}" tabindex="-1" role="dialog"
+                                                         aria-labelledby="myModalLabel">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">编辑服务头像</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="card-body p-4 text-center">
+                                <span class="avatar avatar-xl mb-3 avatar-rounded"
+                                      style="background-image: url({{ MEDIA_URL }}logo/{{ service.icon }}/)"></span>
+                                                                    <h3 class="m-0 mb-1">当前头像</h3>
+                                                                </div>
+                                                                <div class="d-flex">
+                                                                    <div class="container-xl">
+                                                                        <div class="card-body">
+                                                                            <h3 class="card-title">上传图标</h3>
+                                                                            <form class="dropzone" id="dropzone-custom-{{ forloop.counter0 }}"
+                                                                                  action="/company/service/icon/edit/{{ service.id }}/"
+                                                                                  autocomplete="off"
+                                                                                  novalidate>
+                                                                                {% csrf_token %}
+                                                                                <div class="fallback">
+                                                                                    <input name="file" type="file"/>
+                                                                                </div>
+                                                                                <div class="dz-message">
+                                                                                    <h3 class="dropzone-msg-title">
+                                                                                        将图片拖拽至此上传头像</h3>
+                                                                                    <span class="dropzone-msg-desc">只支持.jpg,.png,.jpeg</span>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default"
+                                                                            data-bs-dismiss="modal">取消
+                                                                    </button>
+                                                                    <a href="/company/service/list/" class="btn btn-primary">
+                                                                        确认
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if service.type == 1 %}
+                                                        <div class="mb-3">
+                                                            <a href="/company/service/question/add/{{ service.id }}/"
+                                                               class="btn btn-success w-100">
+                                                                添加问题
+                                                            </a>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <a href="/company/service/question/list/{{ service.id }}/1/"
+                                                               class="btn btn-info w-100">
+                                                                查看问题
+                                                            </a>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="mb-3">
+                                                            <a href="/company/service/reset_url/{{ service.id }}/"
+                                                               class="btn btn-info w-100">
+                                                                重设url
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="mb-3">
+                                                        <a href="/company/service/notice/add/{{ service.id }}/"
+                                                           class="btn btn-success w-100">
+                                                            发通知
+                                                        </a>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <a href="/company/service/notice/list/{{ service.id }}"
+                                                           class="btn btn-info w-100">
+                                                            查看通知
+                                                        </a>
+                                                    </div>
+                                                    {% if service.type == 1 %}
+                                                        <div class="mb-3">
+                                                            <a href="/company/service/deploy/{{ service.id }}/preview/"
+                                                               class="btn btn-warning w-100">
+                                                                部署
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="mb-3">
+                                                        <a href="#" class="btn btn-danger w-100" data-bs-toggle="modal"
+                                                           data-bs-target="#modal-danger-{{ forloop.counter0 }}">
+                                                            删除
+                                                        </a>
+                                                    </div>
+                                                    <div class="modal modal-blur fade"
+                                                         id="modal-danger-{{ forloop.counter0 }}"
+                                                         tabindex="-1" aria-hidden="true" style="display: none;">
+                                                        <div class="modal-dialog modal-sm modal-dialog-centered"
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                <div class="modal-status bg-danger"></div>
+                                                                <div class="modal-body text-center py-4">
+                                                                    <!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         class="icon mb-2 text-danger icon-lg"
+                                                                         width="24" height="24"
+                                                                         viewBox="0 0 24 24" stroke-width="2"
+                                                                         stroke="currentColor" fill="none"
+                                                                         stroke-linecap="round"
+                                                                         stroke-linejoin="round">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                              fill="none"></path>
+                                                                        <path d="M12 9v2m0 4v.01"></path>
+                                                                        <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
+                                                                    </svg>
+                                                                    <h3>你确定？</h3>
+                                                                    <div class="text-muted">你确定要删除这个服务吗？这可是无法撤回的！
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <div class="w-100">
+                                                                        <div class="row">
+                                                                            <div class="col"><a href="#"
+                                                                                                class="btn w-100"
+                                                                                                data-bs-dismiss="modal">
+                                                                                取消
+                                                                            </a></div>
+                                                                            <div class="col"><a
+                                                                                    href="/company/service/delete/{{ service.id }}/"
+                                                                                    class="btn btn-danger w-100"
+                                                                            >
+                                                                                确认删除
+                                                                            </a></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h1>宁没有任何服务！</h1>
+                <p>去<a href="/company/service/new/?step=1">创建一个</a></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script src="{% static 'js/dropzone-min.js' %}" defer></script>
+
+    <script>
+        {% for service in service_list %}
+
+            document.addEventListener("DOMContentLoaded", function () {
+                new Dropzone("#dropzone-custom-{{ forloop.counter0 }}")
+            })
+
+        {% endfor %}
+    </script>
+{% endblock %}

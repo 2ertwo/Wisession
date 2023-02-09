@@ -1,0 +1,135 @@
+{% extends 'user_layout.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/like_wechat.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}对话{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="fake" style="float: left;">
+                        <div class="chathead">
+                            <div class="line1" style="text-align: left;">
+                                <a href="/user/message/" rel="noopener">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24"
+                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M15 6l-6 6l6 6"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                            <div class="line1" style="text-align: center;">
+                                {{ service_obj.service_name }}
+                            </div>
+                            <div class="line1" style="text-align: right;">
+                                <a href="#" rel="noopener">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots"
+                                         width="24"
+                                         height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                         fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+                                        <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+                                        <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="chat overflow-auto" style="max-height: 35rem" id="the_div">
+                            <!-- 对话内容 -->
+                            {% for dialog in dialog_history %}
+                                {% if dialog.by_user %}
+                                    <div class="dialog1">
+                                        <div class="avatar1"><img
+                                                src="{{ MEDIA_URL }}avatars/{{ dialog.user_id.icon }}/"/></div>
+                                        <div class="word1">
+                                            {{ dialog.text }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="dialog2">
+                                        <div class="word2">
+                                            {{ dialog.text }}
+                                        </div>
+                                        <div class="avatar2"><img
+                                                src="{{ MEDIA_URL }}logo/{{ dialog.service_id.icon }}/"/></div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="reply">
+                            <form class="input-group mb-2" id="send_form">
+                                <input type="hidden" value="{{ request.path|slice:"13:-1" }}"
+                                       name="service_id">
+                                <input type="text" class="form-control" placeholder="点击发送信息" name="query" id="query_text">
+                                <button class="btn w-20" type="button" id="btnSend">发送</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script>
+        $(function () {
+            (function () {
+                $("#btnSend").click(
+                    function () {
+                        var data_form = $("#send_form").serialize();
+                        $.ajax({
+                            url: '/user/save_question/',
+                            type: 'post',
+                            data: data_form,
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (res.status) {
+                                    $("#the_div").append(' <div class="dialog1">'+
+                                        '<div class="avatar1"><img src=" ' +'{{ MEDIA_URL }}avatars/{{ user_icon }}/'+
+                                        '"/></div> <div class="word1">'+$("#query_text").val().replace(/</g, "&lt;").replace(/>/g, "&gt;")+' </div></div>');
+                                } else {
+                                    console.log(res)
+                                    $.each(res.error, function (name, errorList) {
+                                        $("#id_" + name).next().text(errorList[0]);
+                                    })
+                                }
+                            }
+                        });
+                        setTimeout(function () {
+                            $.ajax({
+                                url: '/user/qa/',
+                                type: 'post',
+                                data: data_form,
+                                dataType: "JSON",
+                                success: function (res) {
+                                    if (res.status) {
+                                        $("#the_div").append(' <div class="dialog2">'+'<div class="word2">'+res.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;")+' </div>'+
+                                        '<div class="avatar2"><img src=" ' +'{{ MEDIA_URL }}logo/{{ service_obj.icon }}/'+
+                                        '"/></div></div>');
+                                    } else {
+                                        console.log(res)
+                                        $.each(res.error, function (name, errorList) {
+                                            $("#id_" + name).next().text(errorList[0]);
+                                        })
+                                    }
+                                }
+                            });
+                        }, 10);
+                    }
+                )
+            })();
+        })
+    </script>
+{% endblock %}

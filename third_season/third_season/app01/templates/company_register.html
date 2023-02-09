@@ -1,0 +1,101 @@
+{% load static %}
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta16
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>智话未来企业端注册</title>
+    <!-- CSS files -->
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/demo.min.css' %}" rel="stylesheet"/>
+</head>
+<body class=" border-top-wide border-primary d-flex flex-column">
+<script src="{% static 'js/demo.min.js' %}"></script>
+<div class="page page-center">
+    <div class="container container-tight py-4">
+        <div class="text-center mb-4">
+            <a href="." class="navbar-brand navbar-brand-autodark"><img src="{% static 'img/logo.png' %}" height="36"
+                                                                        alt=""></a>
+        </div>
+        <div class="card card-md">
+            <div class="card-body">
+                <h2 class="h2 text-center mb-4">企业端注册</h2>
+                <form action="./" method="post" autocomplete="off" novalidate>
+                    <div class="mb-2">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            {% if forloop.counter0 != 2 %}
+                                {{ field.label }}
+                                {{ field }}
+                                <span style="color: red;">{{ field.errors.0 }}</span>
+                                <br>
+                            {% else %}
+                                <div class="mb-2">
+                                    {{ field.label }}
+                                    {{ field }}
+                                    <span style="color: red;">{{ field.errors.0 }}</span>
+                                    <br>
+                                    <a href="#" class="btn btn-primary" id="btnSave">
+                                        点击发送验证码
+                                    </a>
+                                    <br>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-primary w-100">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-center text-muted mt-3">
+            本来有账号？登录一下 <a href="/company/login/" tabindex="-1">登录</a>
+        </div>
+    </div>
+</div>
+<!-- Libs JS -->
+<!-- Tabler Core -->
+<script src={% static "js/jquery-3.6.1.js" %}></script>
+<script src="{% static 'js/tabler.min.js' %}" defer></script>
+<script src="{% static 'js/demo.min.js' %}" defer></script>
+<script>
+    $(function () {
+        (function () {
+            $("#btnSave").click(
+                function () {
+                    $.ajax({
+                        url: '/company/register/email_send/',
+                        type: 'post',
+                        data: $("#email_zone").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+
+                            } else {
+                                console.log(res)
+                                $.each(res.error, function (name, errorList) {
+                                    $("#id_" + name).next().text(errorList[0]);
+                                })
+                            }
+                        }
+                    })
+                }
+            )
+        })();
+    })
+</script>
+</body>
+</html>

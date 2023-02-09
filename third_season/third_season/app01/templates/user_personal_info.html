@@ -1,0 +1,216 @@
+{% extends 'user_layout.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/dropzone.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}个人信息{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-0 col-lg-4">
+            </div>
+            <div class="col-md-12 col-lg-4">
+                <div class="card">
+                    <div class="card-body p-4 text-center">
+                    <span class="avatar avatar-xl mb-3 avatar-rounded"
+                          style="background-image: url({{ MEDIA_URL }}avatars/{{ personal_info.icon }}/)"></span>
+                    <div><a type="button" class="btn btn-lg" data-bs-toggle="modal"
+                           data-bs-target="#myModal2">
+                            上传头像
+                        </a></div>
+                        <h3 class="m-0 mb-1"><a href="#">{{ personal_info.username }}</a></h3>
+                        <div class="text-muted">账号ID：{{ personal_info.id }}{% if personal_info.gender == 1 %}
+                            <div class="badge bg-blue text-blue-fg" data-demo-color="">男
+                            </div>
+                        {% elif personal_info.gender == 2 %}
+                            <div class="badge bg-pink text-pink-fg" data-demo-color="">女
+                            </div>
+                        {% else %}
+                            <div class="badge bg-muted text-muted-fg" data-demo-color="">未知
+                            </div>
+                        {% endif %}
+                        </div>
+                        <div class="mt-3">
+                            <div id="table-default" class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>
+
+                                        </th>
+                                        <th>
+
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-tbody">
+                                    <tr>
+                                        <td>用户名：</td>
+                                        <td>{{ personal_info.username }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>介绍：</td>
+                                        <td>{{ personal_info.describe }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>邮箱：</td>
+                                        <td>{{ personal_info.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>加入时间：</td>
+                                        <td>{{ personal_info.create_time }}</td>
+                                    </tr>
+                                    <tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <a type="button" class="btn btn-primary card-btn" data-bs-toggle="modal"
+                                data-bs-target="#myModal1">
+                            编辑信息
+                        </a>
+                        <a class="btn card-btn" href="/user/change_password/" role="button">修改密码</a>
+                        <a class="btn btn-danger card-btn" href="/user/logout/" role="button">登出</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑个人信息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form id="edit_form" novalidate>
+                    <div class="modal-body">
+                        {% for field in edit_form %}
+                            <h4>{{ field.label }}</h4>
+                            {{ field }}
+                            <span class="error-msg" style="color: red;"></span>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">取消</button>
+                        <a href="#" id="btnSave" type="button" class="btn btn-primary">保存</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑用户头像</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="card-body p-4 text-center">
+                                <span class="avatar avatar-xl mb-3 avatar-rounded"
+                                      style="background-image: url({{ MEDIA_URL }}avatars/{{ personal_info.icon }}/)"></span>
+                    <h3 class="m-0 mb-1">当前头像</h3>
+                </div>
+                <div class="d-flex">
+                    <div class="container-xl">
+                        <div class="card-body">
+                            <h3 class="card-title">上传头像</h3>
+                            <form class="dropzone" id="dropzone-custom"
+                                  action="/user/edit_icon/" autocomplete="off"
+                                  novalidate>
+                                {% csrf_token %}
+                                <div class="fallback">
+                                    <input name="file" type="file"/>
+                                </div>
+                                <div class="dz-message">
+                                    <h3 class="dropzone-msg-title">将图片拖拽至此上传头像</h3>
+                                    <span class="dropzone-msg-desc">只支持.jpg,.png,.jpeg</span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">取消
+                    </button>
+                    <a href="/user/personal_info/" class="btn btn-primary">
+                        确认
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src={% static "js/jquery-3.6.1.js" %}></script>
+    <script src="{% static 'js/dropzone-min.js' %}" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new Dropzone("#dropzone-custom")
+        })
+    </script>
+    <script>
+        $(function () {
+            (function () {
+                $("#btnSave").click(
+                    function () {
+                        $(".error-message").empty()
+                        $.ajax({
+                            url: '/user/personal_info/edit/',
+                            type: 'post',
+                            data: $("#edit_form").serialize(),
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (res.status) {
+                                    $('#myModal1').modal('hide');
+                                    window.location.reload();
+                                } else {
+                                    $.each(res.error, function (name, errorList) {
+                                        $("#id_" + name).next().text(errorList[0]);
+                                    })
+                                }
+                            }
+                        })
+                    }
+                )
+            })();
+        })
+        $(function () {
+            (function () {
+                $("#btnSave2").click(
+                    function () {
+                        $(".error-message").empty()
+                        $.ajax({
+                            url: '/user/edit_icon/',
+                            type: 'post',
+                            data: $("#dropzone-custom").serialize(),
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (res.status) {
+                                    $('#myModal2').modal('hide');
+                                    window.location.reload();
+                                } else {
+                                    console.log(res)
+                                    $.each(res.error, function (name, errorList) {
+                                        $("#id_" + name).next().text(errorList[0]);
+                                    })
+                                }
+                            }
+                        })
+                    }
+                )
+            })();
+        })
+    </script>
+{% endblock %}
+

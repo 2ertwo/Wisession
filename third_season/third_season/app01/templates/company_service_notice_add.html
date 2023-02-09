@@ -1,0 +1,32 @@
+{% extends 'company_layout.html' %}
+
+{% block title %}服务添加通知{% endblock %}
+
+{% block header %}
+    <h2 class="page-title">服务添加通知</h2>
+{% endblock %}
+{% block content %}
+    <div class="col-md-10">
+        <form class="card" method="post" autocomplete="off" novalidate>
+            <div class="card-header">
+                <h3 class="card-title">添加通知</h3>
+            </div>
+            <div class="card-body">
+            <p>当前正在为服务{{ service_obj.service_name }}添加通知</p>
+                {% csrf_token %}
+                <div class="mb-3">
+                    {% for field in form %}
+                        {{ field.label }}
+                        <div>
+                            {{ field }}
+                            <small class="form-hint">{{ field.errors.0 }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-primary">确认</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
